@@ -3,13 +3,19 @@ const router = require('express').Router();
 const userRoutes = require('./users');
 const cardRoutes = require('./cards');
 
-const ERROR_NOT_FOUND = 404;
+const errors = {
+  ERROR_BAD_REQUEST: 400,
+  ERROR_ACCESS_DENIDED: 403,
+  ERROR_NOT_FOUND: 404,
+  ERROR_DEFAULT: 500,
+};
+// const ERROR_NOT_FOUND = 404;
 
 router.use('/users', userRoutes);
 router.use('/cards', cardRoutes);
 
 router.use((req, res) => {
-  res.status(ERROR_NOT_FOUND).send({
+  res.status(errors.ERROR_NOT_FOUND).send({
     message: 'Page not found',
   });
 });
@@ -23,3 +29,4 @@ router.use((req, res) => {
 // router.use(userRoutes);
 
 module.exports = router;
+module.exports = errors;
