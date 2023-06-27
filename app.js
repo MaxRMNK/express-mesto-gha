@@ -33,6 +33,12 @@ app.use((req, res, next) => {
 
 app.use(router);
 
+app.use((req, res) => {
+  res.status(404).send({
+    message: 'Page not found',
+  });
+});
+
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT} / Приложение прослушивает порт ${PORT}`);

@@ -69,7 +69,13 @@ const deleteCard = async (req, res) => {
       }
     }
   } catch (err) {
-    if (err.message === 'Forbidden') {
+    if (err.name === 'CastError') {
+      res.status(400).send({
+        message: 'Bad Request',
+        err: err.message,
+        stack: err.stack,
+      });
+    } else if (err.message === 'Forbidden') {
       res.status(403).send({
         message: 'Access denied',
       });
@@ -101,7 +107,13 @@ const likeCard = (req, res) => {
     })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.message === 'NotFound') {
+      if (err.name === 'CastError') {
+        res.status(400).send({
+          message: 'Bad Request',
+          err: err.message,
+          stack: err.stack,
+        });
+      } else if (err.message === 'NotFound') {
         res.status(404).send({
           message: 'Card not found',
         });
@@ -126,7 +138,13 @@ const dislikeCard = (req, res) => {
     })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.message === 'NotFound') {
+      if (err.name === 'CastError') {
+        res.status(400).send({
+          message: 'Bad Request',
+          err: err.message,
+          stack: err.stack,
+        });
+      } else if (err.message === 'NotFound') {
         res.status(404).send({
           message: 'Card not found',
         });
