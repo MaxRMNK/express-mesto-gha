@@ -1,9 +1,10 @@
 const userModel = require('../models/user');
 // const ValidationError = require('../errors/validation-error');
+const errors = require('../routes');
 
-const ERROR_BAD_REQUEST = 400;
-const ERROR_NOT_FOUND = 404;
-const ERROR_DEFAULT = 500;
+// const ERROR_BAD_REQUEST = 400;
+// const ERROR_NOT_FOUND = 404;
+// const ERROR_DEFAULT = 500;
 
 // Роут, путь, маршрут, эндпоинт для получения пользователей
 const getUsers = (req, res) => {
@@ -11,7 +12,7 @@ const getUsers = (req, res) => {
     .then((users) => res
       .status(200).send(users))
     .catch(() => res
-      .status(ERROR_DEFAULT).send({
+      .status(errors.ERROR_DEFAULT).send({
         message: 'Internal server Error',
       }));
 };
@@ -27,15 +28,15 @@ const getUserById = (req, res) => {
       .status(200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_BAD_REQUEST).send({
+        res.status(errors.ERROR_BAD_REQUEST).send({
           message: 'Bad Request',
         });
       } else if (err.message === 'NotFound') {
-        res.status(ERROR_NOT_FOUND).send({
+        res.status(errors.ERROR_NOT_FOUND).send({
           message: 'User not found',
         });
       } else {
-        res.status(ERROR_DEFAULT).send({
+        res.status(errors.ERROR_DEFAULT).send({
           message: 'Internal server Error',
         });
       }
@@ -51,11 +52,11 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_BAD_REQUEST).send({
+        res.status(errors.ERROR_BAD_REQUEST).send({
           message: 'Bad Request',
         });
       } else {
-        res.status(ERROR_DEFAULT).send({
+        res.status(errors.ERROR_DEFAULT).send({
           message: 'Internal server Error',
         });
       }
@@ -79,15 +80,15 @@ const updateUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_BAD_REQUEST).send({
+        res.status(errors.ERROR_BAD_REQUEST).send({
           message: 'Bad Request',
         });
       } else if (err.message === 'NotFound') {
-        res.status(ERROR_NOT_FOUND).send({
+        res.status(errors.ERROR_NOT_FOUND).send({
           message: 'User not found',
         });
       } else {
-        res.status(ERROR_DEFAULT).send({
+        res.status(errors.ERROR_DEFAULT).send({
           message: 'Internal server Error',
         });
       }
@@ -111,15 +112,15 @@ const updateUserAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_BAD_REQUEST).send({
+        res.status(errors.ERROR_BAD_REQUEST).send({
           message: 'Bad Request',
         });
       } else if (err.message === 'NotFound') {
-        res.status(ERROR_NOT_FOUND).send({
+        res.status(errors.ERROR_NOT_FOUND).send({
           message: 'User not found',
         });
       } else {
-        res.status(ERROR_DEFAULT).send({
+        res.status(errors.ERROR_DEFAULT).send({
           message: 'Internal server Error',
         });
       }

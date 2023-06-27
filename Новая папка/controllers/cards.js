@@ -1,9 +1,10 @@
 const cardModel = require('../models/card');
+const errors = require('../routes');
 
-const ERROR_BAD_REQUEST = 400;
-const ERROR_ACCESS_DENIDED = 403;
-const ERROR_NOT_FOUND = 404;
-const ERROR_DEFAULT = 500;
+// const ERROR_BAD_REQUEST = 400;
+// const ERROR_ACCESS_DENIDED = 403;
+// const ERROR_NOT_FOUND = 404;
+// const ERROR_DEFAULT = 500;
 
 const getCards = (req, res) => {
   cardModel.find({})
@@ -11,7 +12,7 @@ const getCards = (req, res) => {
     .then((cards) => res.status(200).send(cards))
     // Почему-то на проверку ушла предпоследняя редакция, в последней статусы уже были исправлены.
     // Надеюсь сейчас все сохранится как положено.
-    .catch(() => res.status(ERROR_DEFAULT).send({
+    .catch(() => res.status(errors.ERROR_DEFAULT).send({
       message: 'Internal server Error',
     }));
 };
@@ -24,11 +25,11 @@ const createCard = (req, res) => {
     .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_BAD_REQUEST).send({
+        res.status(errors.ERROR_BAD_REQUEST).send({
           message: 'Bad Request',
         });
       } else {
-        res.status(ERROR_DEFAULT).send({
+        res.status(errors.ERROR_DEFAULT).send({
           message: 'Internal server Error',
         });
       }
@@ -64,19 +65,19 @@ const deleteCard = async (req, res) => {
     }
   } catch (err) {
     if (err.name === 'CastError') {
-      res.status(ERROR_BAD_REQUEST).send({
+      res.status(errors.ERROR_BAD_REQUEST).send({
         message: 'Bad Request',
       });
     } else if (err.message === 'Forbidden') {
-      res.status(ERROR_ACCESS_DENIDED).send({
+      res.status(errors.ERROR_ACCESS_DENIDED).send({
         message: 'Access denied',
       });
     } else if (err.message === 'NotFound') {
-      res.status(ERROR_NOT_FOUND).send({
+      res.status(errors.ERROR_NOT_FOUND).send({
         message: 'Card not found',
       });
     } else {
-      res.status(ERROR_DEFAULT).send({
+      res.status(errors.ERROR_DEFAULT).send({
         message: 'Internal server Error',
       });
     }
@@ -98,15 +99,15 @@ const likeCard = (req, res) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_BAD_REQUEST).send({
+        res.status(errors.ERROR_BAD_REQUEST).send({
           message: 'Bad Request',
         });
       } else if (err.message === 'NotFound') {
-        res.status(ERROR_NOT_FOUND).send({
+        res.status(errors.ERROR_NOT_FOUND).send({
           message: 'Card not found',
         });
       } else {
-        res.status(ERROR_DEFAULT).send({
+        res.status(errors.ERROR_DEFAULT).send({
           message: 'Internal server Error',
         });
       }
@@ -125,15 +126,15 @@ const dislikeCard = (req, res) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_BAD_REQUEST).send({
+        res.status(errors.ERROR_BAD_REQUEST).send({
           message: 'Bad Request',
         });
       } else if (err.message === 'NotFound') {
-        res.status(ERROR_NOT_FOUND).send({
+        res.status(errors.ERROR_NOT_FOUND).send({
           message: 'Card not found',
         });
       } else {
-        res.status(ERROR_DEFAULT).send({
+        res.status(errors.ERROR_DEFAULT).send({
           message: 'Internal server Error',
         });
       }
