@@ -1,12 +1,17 @@
 const cardModel = require('../models/card');
 
+const ERROR_BAD_REQUEST = 400;
+const ERROR_ACCESS_DENIDED = 403;
+const ERROR_NOT_FOUND = 404;
+const ERROR_DEFAULT = 500;
+
 const getCards = (req, res) => {
   // // eslint-disable-next-line no-console
   // console.log('Роут getCards, req.user._id:', req.user._id);
 
   cardModel.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch((err) => res.status(500).send({
+    .catch((err) => res.status(ERROR_DEFAULT).send({
       message: 'Internal server Error',
       err: err.message,
       stack: err.stack,
@@ -24,13 +29,13 @@ const createCard = (req, res) => {
     .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({
+        res.status(ERROR_BAD_REQUEST).send({
           message: 'Bad Request',
           err: err.message,
           stack: err.stack,
         });
       } else {
-        res.status(500).send({
+        res.status(ERROR_DEFAULT).send({
           message: 'Internal server Error',
           err: err.message,
           stack: err.stack,
@@ -70,21 +75,21 @@ const deleteCard = async (req, res) => {
     }
   } catch (err) {
     if (err.name === 'CastError') {
-      res.status(400).send({
+      res.status(ERROR_BAD_REQUEST).send({
         message: 'Bad Request',
         err: err.message,
         stack: err.stack,
       });
     } else if (err.message === 'Forbidden') {
-      res.status(403).send({
+      res.status(ERROR_ACCESS_DENIDED).send({
         message: 'Access denied',
       });
     } else if (err.message === 'NotFound') {
-      res.status(404).send({
+      res.status(ERROR_NOT_FOUND).send({
         message: 'Card not found',
       });
     } else {
-      res.status(500).send({
+      res.status(ERROR_DEFAULT).send({
         message: 'Internal server Error',
         err: err.message,
         stack: err.stack,
@@ -108,17 +113,17 @@ const likeCard = (req, res) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({
+        res.status(ERROR_BAD_REQUEST).send({
           message: 'Bad Request',
           err: err.message,
           stack: err.stack,
         });
       } else if (err.message === 'NotFound') {
-        res.status(404).send({
+        res.status(ERROR_NOT_FOUND).send({
           message: 'Card not found',
         });
       } else {
-        res.status(500).send({
+        res.status(ERROR_DEFAULT).send({
           message: 'Internal server Error',
           err: err.message,
           stack: err.stack,
@@ -139,17 +144,17 @@ const dislikeCard = (req, res) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({
+        res.status(ERROR_BAD_REQUEST).send({
           message: 'Bad Request',
           err: err.message,
           stack: err.stack,
         });
       } else if (err.message === 'NotFound') {
-        res.status(404).send({
+        res.status(ERROR_NOT_FOUND).send({
           message: 'Card not found',
         });
       } else {
-        res.status(500).send({
+        res.status(ERROR_DEFAULT).send({
           message: 'Internal server Error',
           err: err.message,
           stack: err.stack,
