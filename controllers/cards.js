@@ -11,9 +11,9 @@ const NotFoundError = require('../errors/not-found-err'); // 404 Not Found
 // Роут получения всех карточек
 const getCards = (req, res, next) => {
   cardModel.find({})
-    .orFail(() => {
-      throw new ValidationError('Некорректный запрос');
-    })
+    // .orFail(() => {
+    //   throw new ValidationError('Некорректный запрос');
+    // })
     .then((cards) => res.status(200).send(cards))
     .catch(next);
 };
