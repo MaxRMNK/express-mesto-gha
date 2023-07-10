@@ -1,52 +1,54 @@
+const mongoose = require('mongoose');
 const cardModel = require('../models/card');
 
-const ERROR_BAD_REQUEST = 400;
-const ERROR_ACCESS_DENIDED = 403;
-const ERROR_NOT_FOUND = 404;
-const ERROR_DEFAULT = 500;
+const ValidationError = require('../errors/validation-err'); // 400 Bad Request
+// const UnauthorizedError = require('../errors/unauthorized-err'); // 401 Unauthorized
+const ForbiddenError = require('../errors/forbidden-err'); // 403 Forbidden
+const NotFoundError = require('../errors/not-found-err'); // 404 Not Found
+// const ConflictError = require('../errors/conflict-err'); // 409 Conflict
+// const UnhandledError = require('../errors/unhandled-err'); // 500 Internal Server Error
 
-const getCards = (req, res) => {
+// Роут получения всех карточек
+const getCards = (req, res, next) => {
   cardModel.find({})
+    .orFail(() => {
+      throw new ValidationError('Некорректный запрос');
+    })
     .then((cards) => res.status(200).send(cards))
-    // Почему-то на проверку ушла предпоследняя редакция, в последней статусы уже были исправлены.
-    // Надеюсь сейчас все сохранится как положено.
-    .catch(() => res.status(ERROR_DEFAULT).send({
-      message: 'Internal server Error',
-    }));
+    .catch(next);
 };
 
-const createCard = (req, res) => {
-  const { _id } = req.user; // ID пользоваля, задан в app.js
+// Роут создания карточки
+// Если в запросе передать действующий токен от пользователя, который уже удален, тогда
+// можно создать карточку от его имени. Нужно сделать проверку существования пользователя
+// в базе и выбрасывать ошибку если его нет?
+const createCard = (req, res, next) => {
+  const { _id } = req.user; // ID пользоваля, из токена
   const { name, link } = req.body;
 
   cardModel.create({ name, link, owner: _id })
     .then((card) => res.status(201).send(card))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(ERROR_BAD_REQUEST).send({
-          message: 'Bad Request',
-        });
+      if (err instanceof mongoose.Error.ValidationError) {
+        next(new ValidationError('Ошибка валидации, переданы некорректные данные'));
       } else {
-        res.status(ERROR_DEFAULT).send({
-          message: 'Internal server Error',
-        });
+        next(err);
       }
     });
 };
 
-// Вариант 3. Работает. Ниже сохранил вариант (2) без async/await и try/catch
-// !!!
-// Большое спасибо за советы! Так действительно проще и чуть красивее
-// Большое спасибо за советы! Так действительно проще и чуть красивее
-const deleteCard = async (req, res) => {
+// Роут удаления карточки
+// Переписать, сделать проще и короче?
+const deleteCard = async (req, res, next) => {
   try {
     const { cardId } = req.params; // ID удаляемой карточки, из URL
-    const { _id } = req.user; // ID пользоваля, задан в app.js
+    const { _id } = req.user; // ID пользоваля получаем из токена (в ПР13 был задан в app.js)
 
-    // Если карточка с таким ID не найдена - выбрасывается ошибка
+    // Ждем пока найдется карточка с таким ID, и идем дальше
     const card = await cardModel.findById(cardId);
+
     if (card === null) {
-      throw new Error('NotFound');
+      throw new NotFoundError('Карточка не найдена');
     } else {
       const cardOwnerId = card.owner.toString();
 
@@ -56,91 +58,57 @@ const deleteCard = async (req, res) => {
         cardModel.deleteOne(card)
           .then(() => res.status(200).send({
             message: 'Карточка успешно удалена',
-          }));
+          }))
+          .catch(next);
       } else {
         // Выдаем ошибку, если карточку удаляет не тот пользователь, который ее создал
-        throw new Error('Forbidden');
+        throw new ForbiddenError('Вы не можете удалить чужую карточку');
       }
     }
   } catch (err) {
-    if (err.name === 'CastError') {
-      res.status(ERROR_BAD_REQUEST).send({
-        message: 'Bad Request',
-      });
-    } else if (err.message === 'Forbidden') {
-      res.status(ERROR_ACCESS_DENIDED).send({
-        message: 'Access denied',
-      });
-    } else if (err.message === 'NotFound') {
-      res.status(ERROR_NOT_FOUND).send({
-        message: 'Card not found',
-      });
+    if (err instanceof mongoose.Error.CastError) {
+      next(new ValidationError('Некорректный ID карточки'));
     } else {
-      res.status(ERROR_DEFAULT).send({
-        message: 'Internal server Error',
-      });
+      next(err);
     }
   }
 };
 
-const likeCard = (req, res) => {
-  const { cardId } = req.params; // ID удаляемой карточки, из URL
-  const { _id } = req.user; // ID пользоваля, задан в app.js
+// !!! НЕ ЭКСПОРТИРОВАТЬ
+// Роут обновления карточки
+// Надо ли проверять, есть или нет у карточки лайк? Сейчас статус 200 даже если "ставится" лайк,
+// когда он уже есть, или "убирается" когда его и нет.
+const updateCard = (req, res, next, likeData) => {
+  const { cardId } = req.params; // ID карточки которой ставится/удаляется лайк, из URL
 
   cardModel.findByIdAndUpdate(
     cardId,
-    { $addToSet: { likes: _id } }, // добавить _id в массив, если его там нет
+    likeData,
     { new: true },
   )
     .orFail(() => { // Если карточка с таким ID не найдена - выбрасывается ошибка
-      throw new Error('NotFound');
+      throw new NotFoundError('Карточка не найдена');
     })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(ERROR_BAD_REQUEST).send({
-          message: 'Bad Request',
-        });
-      } else if (err.message === 'NotFound') {
-        res.status(ERROR_NOT_FOUND).send({
-          message: 'Card not found',
-        });
+      if (err instanceof mongoose.Error.CastError) {
+        next(new ValidationError('Некорректный ID карточки'));
       } else {
-        res.status(ERROR_DEFAULT).send({
-          message: 'Internal server Error',
-        });
+        next(err);
       }
     });
 };
 
-const dislikeCard = (req, res) => {
-  const { cardId } = req.params; // ID удаляемой карточки, из URL
-  const { _id } = req.user; // ID пользоваля, задан в app.js
+// Роут обновления карточки - поставить лайк
+const likeCard = (req, res, next) => {
+  const { _id } = req.user; // ID пользоваля, из токена
+  updateCard(req, res, next, { $addToSet: { likes: _id } });
+};
 
-  cardModel.findByIdAndUpdate(
-    cardId,
-    { $pull: { likes: _id } }, // убрать _id из массива
-    { new: true },
-  )
-    .orFail(() => { // Если карточка с таким ID не найдена - выбрасывается ошибка
-      throw new Error('NotFound');
-    })
-    .then((card) => res.status(200).send(card))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(ERROR_BAD_REQUEST).send({
-          message: 'Bad Request',
-        });
-      } else if (err.message === 'NotFound') {
-        res.status(ERROR_NOT_FOUND).send({
-          message: 'Card not found',
-        });
-      } else {
-        res.status(ERROR_DEFAULT).send({
-          message: 'Internal server Error',
-        });
-      }
-    });
+// Роут обновления карточки - убрать лайк
+const dislikeCard = (req, res, next) => {
+  const { _id } = req.user; // ID пользоваля, из токена
+  updateCard(req, res, next, { $pull: { likes: _id } });
 };
 
 module.exports = {
