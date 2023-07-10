@@ -3,7 +3,7 @@ const errorHandler = (err, req, res, next) => {
 
   const {
     statusCode = 500, // Будет присвоен статус по-умолчанию, если statusCode пустой
-    message = 'Внутренняя ошибка сервера', // Будет присвоен если нет текста ошибки
+    message = 'На сервере произошла ошибка', // Будет присвоен если нет текста ошибки
   } = err;
 
   res.status(statusCode).send({ message });

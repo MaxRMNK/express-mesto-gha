@@ -14,6 +14,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 // Подключение к серверу mongo + Обработка ошибок подключения.
+// Спасибо за информацию, но нам вроде запретили пока создавать .env, т.к. он не пушится на гитхаб
 mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true })
   .then(() => { console.log('Успешное подключение к базе данных'); }) // Удалить при деплое?
   .catch(() => { console.log('Ошибка подключения к базе данных'); });
