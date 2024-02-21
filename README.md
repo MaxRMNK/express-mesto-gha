@@ -3,6 +3,8 @@
 # Проект "Mesto: подготовка бэкенда"
 https://github.com/MaxRMNK/express-mesto-gha
 
+Коллекции запросов для Postman, которые позволяют протестировать работу серверной части приложения Mesto: https://github.com/MaxRMNK/postman_collection_mesto-api
+
 ## Описание
 Проект выполнен в качестве проверочного задания в рамках учебной программы **[ЯндексПрактикум «Веб-разработчик»](https://practicum.yandex.ru/web/)**, курс 6 (спринт 8), **проектные работы #13 и #14**.
 
@@ -10,11 +12,10 @@ https://github.com/MaxRMNK/express-mesto-gha
 Целью этих работ является изучение на практике синтаксиса и возможностей Node, Express.js и MongoDB, получение навыков в настройке и работе с ними.
 
 ### Технологии
- - JavaScript ES6
- - Среда выполнения JavaScript на сервере Node.js v.18
+ - JavaScript
+ - Node.js
  - Фреймворк Express.js
- - NoSQL база данных MongoDB
- - Библиотека Mongoose для работы с MongoDB
+ - MongoDB и библиотека Mongoose
  - ESLint и стайлгайд Airbnb
 
 ## История изменений
@@ -97,11 +98,11 @@ https://github.com/MaxRMNK/express-mesto-gha
   ```
 
 
-## Планы по доработке
+## Можно доработать
   * Вынести функции валидации из файлов `routes/` в `/middlewares/validatons.js`.
   * Тексты ошибок вынести в отдельный файл с константами.
   * Можно использовать https://www.npmjs.com/package/express-rate-limit для ограничения кол-во запросов. Для защиты от DoS-атак.
   * Можно использовать helmet для защиты приложения от некоторых широко известных веб-уязвимостей путем соответствующей настройки заголовков HTTP: https://expressjs.com/ru/advanced/best-practice-security.html.
   * Кросс-доменные запросы и механизм CORS (ПР 15).
   * Сбор логов - библиотека для логирования `winston` и мидлвэр `express-winston` (ПР 15).
-  * Вынести в `.env` адрес коннекта к БД (комменты ревьюера к ПР 14).
+  * Вынести в `.env` адрес коннекта к БД.
