@@ -37,22 +37,22 @@ https://github.com/MaxRMNK/express-mesto-gha
 
 ## API
 ### Signin/Signup
-  * POST /signin — Вход (email, password)
-  * POST /signup — Регистрация (required: email, password, additional: name, about, avatar)
+  * `POST /signin` — Авторизация (email, password)
+  * `POST /signup` — Регистрация (required: email, password, additional: name, about, avatar)
 
 ### Users
-  * GET /users — Получить список всех пользователей
-  * GET /users/me — Получить данные текущего пользователя
-  * GET /users/ID — Получить пользователя по ID
-  * PATCH /users/me — Изменить данные текущего пользователя (name, about)
-  * PATCH /users/me/avatar — Изменить аватар (avatar)
+  * `GET /users` — Получить список всех пользователей
+  * `GET /users/me` — Получить данные текущего пользователя
+  * `GET /users/:ID` — Получить пользователя по ID
+  * `PATCH /users/me` — Изменить данные текущего пользователя (name, about)
+  * `PATCH /users/me/avatar` — Изменить аватар (avatar)
 
 ### Cards
-  * POST /cards — Создать карточку (name, link)
-  * GET /cards — Получить все карточки
-  * DELETE /cards/ID — Удалить карточку по ID
-  * PUT /cards/ID/likes — Поставить лайк карточке по ID
-  * DELETE /cards/ID/likes — Убрать лайк с карточки по ID
+  * `POST /cards` — Создать карточку (name, link)
+  * `GET /cards` — Получить все карточки
+  * `DELETE /cards/:ID` — Удалить карточку по ID
+  * `PUT /cards/:ID/likes` — Поставить лайк карточке по ID
+  * `DELETE /cards/:ID/likes` — Убрать лайк с карточки по ID
 
 
 ## Директории
@@ -108,5 +108,5 @@ https://github.com/MaxRMNK/express-mesto-gha
   * Можно использовать https://www.npmjs.com/package/express-rate-limit для ограничения кол-во запросов. Для защиты от DoS-атак.
   * Можно использовать helmet для защиты приложения от некоторых широко известных веб-уязвимостей путем соответствующей настройки заголовков HTTP: https://expressjs.com/ru/advanced/best-practice-security.html.
   * Кросс-доменные запросы и механизм CORS (ПР 15).
-  * Сбор логов - библиотека для логирования winston и мидлвэр express-winston (ПР 15).
-  * Вынести в .env адрес коннекта к БД (комменты ревьюера к ПР 14).
+  * Сбор логов - библиотека для логирования `winston` и мидлвэр `express-winston` (ПР 15).
+  * Вынести в `.env` адрес коннекта к БД (комменты ревьюера к ПР 14).

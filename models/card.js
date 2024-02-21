@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// Для сокращения размер дистрибутива, подключаются только используемые библиотеки:
+// Для сокращения размера дистрибутива, подключаются только используемые библиотеки:
 // const { isURL } = require('validator'); // 112.6k
 const isURL = require('validator/lib/isURL');
 
