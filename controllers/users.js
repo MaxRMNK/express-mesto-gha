@@ -117,7 +117,7 @@ const login = (req, res, next) => {
 
   // ПР14. Рекомендация В.Малий, чтобы отсеч пустые запросы еще до обращения к БД.
   if (!email || !password) {
-    throw new UnauthorizedError('Неправильные почта или пароль 111');
+    throw new UnauthorizedError('Неправильные почта или пароль');
   }
 
   UserModel.findOne({ email })

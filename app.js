@@ -7,6 +7,9 @@ const cookieParser = require('cookie-parser');
 // const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 
+// Логгеры
+// const { requestLogger, errorLogger } = require('./middlewares/logger');
+
 const router = require('./routes'); // Файл index берется по-умолчанию, указывать не надо
 const { errorHandler } = require('./middlewares/error');
 
@@ -31,7 +34,13 @@ app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // Для получения токена из куков
 
+// Логгер запросов. Нужно подключить до всех обработчиков роутов
+// app.use(requestLogger);
+
 app.use(router);
+
+// Логгер ошибок. Нужно подключить после обработчиков роутов и до обработчиков ошибок
+// app.use(errorLogger);
 
 app.use(errors()); // Обработчик ошибок celebrate
 app.use(errorHandler); // Централизованный обработчик ошибок

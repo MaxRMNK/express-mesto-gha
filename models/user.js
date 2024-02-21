@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 // const bcrypt = require('bcryptjs');
-const { isEmail, isURL } = require('validator');
+// Для сокращения размер дистрибутива, подключаются только используемые библиотеки:
+// const { isEmail, isURL } = require('validator'); // 112.6k
+const isURL = require('validator/lib/isURL');
+const isEmail = require('validator/lib/isEmail');
 
 // Определение схемы
 const userSchema = new mongoose.Schema({
