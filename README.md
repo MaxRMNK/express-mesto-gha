@@ -70,8 +70,9 @@ https://github.com/MaxRMNK/express-mesto-gha
     git clone git@github.com:MaxRMNK/express-mesto-gha.git
     cd express-mesto-gha
     ```
-2. Проверить версию устновленного Node.js с библиотекой пакетов NPM
+2. Проверить версии устновленных MongoDB, Node.js и библиотеки пакетов NPM
     ```shell
+    mongod -version # проверка версии MongoDB
     node -v # проверка версии Node.js
     npm -v # проверка версии NPM
     ```
