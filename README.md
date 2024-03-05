@@ -12,11 +12,12 @@ https://github.com/MaxRMNK/express-mesto-gha
 Целью этих работ является изучение на практике синтаксиса и возможностей Node, Express.js и MongoDB, получение навыков в настройке и работе с ними.
 
 ### Технологии
- - JavaScript
- - Node.js
- - Фреймворк Express.js
- - MongoDB и библиотека Mongoose
- - ESLint и стайлгайд Airbnb
+ - JavaScript ES6
+ - Серверная среда выполнения JavaScript - Node.js v.20.11.1
+ - Библиотека пакетов NPM v.10.2.4
+ - Фреймворк Express.js v.4.18.2
+ - MongoDB v.4.4.22 и библиотека Mongoose v.7.6.8
+ - ESLint v.8.43.0 и стайлгайд Airbnb v.15.0.0
 
 ## История изменений
 ### Проектная работа 13. "Mesto: подготовка бэкенда"
@@ -55,7 +56,6 @@ https://github.com/MaxRMNK/express-mesto-gha
   * `PUT /cards/:ID/likes` — Поставить лайк карточке по ID
   * `DELETE /cards/:ID/likes` — Убрать лайк с карточки по ID
 
-
 ## Директории
   * `/routes` — Файлы роутера
   * `/controllers` — Файлы контроллеров пользователя и карточки
@@ -70,7 +70,12 @@ https://github.com/MaxRMNK/express-mesto-gha
     git clone git@github.com:MaxRMNK/express-mesto-gha.git
     cd express-mesto-gha
     ```
-2. Установить проект и его зависимости
+2. Проверить версию устновленного Node.js с библиотекой пакетов NPM
+    ```shell
+    node -v # проверка версии Node.js
+    npm -v # проверка версии NPM
+    ```
+3. Установить проект и его зависимости
     ```shell
     npm install
     ```
@@ -94,9 +99,8 @@ https://github.com/MaxRMNK/express-mesto-gha
   ```
   # .env
   NODE_ENV=production
-  SECRET_KEY_ENV=9Y5Qnt9sgmY0tuX3d2jQTz2LqewAIjD0uyfKSLZ5II0p01g4fVYwazgjuZRgzqsA
+  SECRET_KEY_ENV=9Y5Qnt9sgmY0tuX3d2jQTz2D0uyfKSLZ5II0p01g4fVYwazgjuZRgzqsALqewAIj
   ```
-
 
 ## Можно доработать
   * Вынести функции валидации из файлов `routes/` в `/middlewares/validatons.js`.
